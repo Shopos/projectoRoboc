@@ -20,10 +20,16 @@ class MenuSelector : AppCompatActivity() {
         }
         val option1 = findViewById<ImageView>(R.id.option1)
 
+        val option3 = findViewById<ImageView>(R.id.option3)
+
         option1.setOnClickListener{
             val intent = Intent(this, PistaBailable::class.java)
             startActivity(intent)
         }
 
+        option3.setOnClickListener{
+            val intent = Intent(this, ControlBot::class.java)
+            startActivity(intent)
+        }
     }
 }
