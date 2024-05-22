@@ -13,12 +13,11 @@
         android:theme="@style/appTheme"
         tools:targetApi="31">
         <activity
-            android:name=".PistaBailable"
+            android:name=".ControlBot"
             android:exported="false" />
         <activity
-            android:name=".PistaBaila"
-            android:exported="false"
-            android:theme="@style/appTheme" />
+            android:name=".PistaBailable"
+            android:exported="false" />
         <activity
             android:name=".MenuSelector"
             android:exported="false" />
