@@ -17,6 +17,7 @@ class ControlBot : AppCompatActivity() {
     private lateinit var joystickLayout: RelativeLayout
     private var centerX: Float = 0f
     private var centerY: Float = 0f
+    private var radius: Float = 0f
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,12 +38,12 @@ class ControlBot : AppCompatActivity() {
         }
 
         joystickBall = findViewById(R.id.joystickBall)
-
         joystickLayout = findViewById(R.id.joystickLayout)
 
         joystickLayout.post {
             centerX = (joystickLayout.width / 2).toFloat()
             centerY = (joystickLayout.height / 2).toFloat()
+            radius = (joystickLayout.width / 2).toFloat() - (joystickBall.width / 2).toFloat()
             joystickBall.x = centerX - joystickBall.width / 2
             joystickBall.y = centerY - joystickBall.height / 2
         }
@@ -50,26 +51,34 @@ class ControlBot : AppCompatActivity() {
         joystickBall.setOnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_MOVE -> {
-                    // Obtener las coordenadas del evento
-                    val x = event.x
-                    val y = event.y
+                    val x = event.rawX - joystickLayout.left
+                    val y = event.rawY - joystickLayout.top
 
-                    val xIn = x.coerceIn(joystickBall.width / 2f, joystickLayout.width - joystickBall.width / 2f)
-                    val yIn = y.coerceIn(joystickBall.height / 2f, joystickLayout.height - joystickBall.height / 2f)
-                    // Actualizar la posición de la imagen del joystick de acuerdo con el evento
-                    joystickBall.x = xIn - joystickBall.width / 2
-                    joystickBall.y = yIn - joystickBall.height / 2
+                    val dx = x - centerX
+                    val dy = y - centerY
+                    val distance = Math.sqrt((dx * dx + dy * dy).toDouble())
+
+                    if (distance <= radius) {
+                        joystickBall.x = x - joystickBall.width / 2
+                        joystickBall.y = y - joystickBall.height / 2
+                    } else {
+                        val ratio = radius / distance
+                        val constrainedX = centerX + dx * ratio
+                        val constrainedY = centerY + dy * ratio
+                        joystickBall.x = constrainedX.toFloat() - joystickBall.width / 2
+                        joystickBall.y = constrainedY.toFloat() - joystickBall.height / 2
+                    }
 
                     // Aquí puedes agregar la lógica para procesar el movimiento del joystick
                 }
-                MotionEvent.ACTION_UP ->{
+                MotionEvent.ACTION_UP -> {
                     joystickBall.x = centerX - joystickBall.width / 2
                     joystickBall.y = centerY - joystickBall.height / 2
                 }
             }
             true
         }
-
-
     }
+
+
 }
