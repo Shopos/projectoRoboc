@@ -18,8 +18,9 @@ class MenuSelector : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val option1 = findViewById<ImageView>(R.id.option1)
 
+        val option1 = findViewById<ImageView>(R.id.option1)
+        val option2 = findViewById<ImageView>(R.id.option2)
         val option3 = findViewById<ImageView>(R.id.option3)
 
         option1.setOnClickListener{
@@ -27,9 +28,14 @@ class MenuSelector : AppCompatActivity() {
             startActivity(intent)
         }
 
+        option2.setOnClickListener {
+            startActivity(Intent(this, Building::class.java))
+        }
+
         option3.setOnClickListener{
             val intent = Intent(this, ControlBot::class.java)
             startActivity(intent)
         }
+
     }
 }

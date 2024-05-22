@@ -16,6 +16,9 @@
             android:name=".ControlBot"
             android:exported="false" />
         <activity
+            android:name=".Building"
+            android:exported="false" />
+        <activity
             android:name=".PistaBailable"
             android:exported="false" />
         <activity
