@@ -8,9 +8,13 @@ import android.content.Intent
 import android.widget.Button
 import androidx.core.view.WindowInsetsCompat
 import android.media.MediaPlayer
+import android.widget.FrameLayout
+import android.widget.ImageView
 
 
 class PistaBailable : AppCompatActivity() {
+
+    private var selectedFrame: FrameLayout? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -27,31 +31,32 @@ class PistaBailable : AppCompatActivity() {
         val mediaPlayer = MediaPlayer.create(this, R.raw.music_file)
 
         //val backButton = findViewById<Button>(R.id.volverButton)
-        /**
-        backButton.setOnClickListener{
-            mediaPlayer.pause()
-            mediaPlayer.seekTo(0)
-            val intent = Intent(this, MenuSelector::class.java)
-            startActivity(intent)
-        }
-        startButton.setOnClickListener {
-            mediaPlayer.start()
-            startButton.visibility = Button.GONE
-            stopButton.visibility = Button.VISIBLE
-        }
 
-        stopButton.setOnClickListener {
-            mediaPlayer.pause()
-            mediaPlayer.seekTo(0)
-            startButton.visibility = Button.VISIBLE
-            stopButton.visibility = Button.GONE
-        }
+        val baile1 = findViewById<FrameLayout>(R.id.baile1)
+        val baile2 = findViewById<FrameLayout>(R.id.baile2)
+        val baile3 = findViewById<FrameLayout>(R.id.baile3)
 
-         **/
+
+
+        baile1.setOnClickListener{onImageClick(baile1)}
+        baile2.setOnClickListener{onImageClick(baile2)}
+        baile3.setOnClickListener{onImageClick(baile3)}
+
+
+
+
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
+    private fun onImageClick(frameLayout: FrameLayout) {
+        if (frameLayout.id == selectedFrame?.id) {
+            frameLayout.setBackgroundResource(android.R.color.transparent)
+            selectedFrame = null
+        }
+        else {
+            selectedFrame?.setBackgroundResource(android.R.color.transparent)
+            frameLayout.setBackgroundResource(R.drawable.border)
+            selectedFrame = frameLayout
+        }
     }
+
 }

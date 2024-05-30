@@ -12,11 +12,13 @@ import androidx.core.view.WindowInsetsCompat
 import android.widget.Button
 import android.content.Intent
 import android.util.Log
+import android.widget.TextView
 import kotlin.math.atan2
 
 class ControlBot : AppCompatActivity() {
     private lateinit var joystickBall: ImageView
     private lateinit var joystickLayout: RelativeLayout
+    private lateinit var directionText: TextView
     private var centerX: Float = 0f
     private var centerY: Float = 0f
     private var radius: Float = 0f
@@ -37,6 +39,8 @@ class ControlBot : AppCompatActivity() {
 
         joystickBall = findViewById(R.id.joystickBall)
         joystickLayout = findViewById(R.id.joystickLayout)
+        directionText = findViewById(R.id.textView12)
+        directionText.text = ""
 
         joystickLayout.post {
             centerX = (joystickLayout.width / 2).toFloat()
@@ -92,6 +96,8 @@ class ControlBot : AppCompatActivity() {
                         direction = "Derecha"
                     }
 
+                    directionText.text = direction
+
                     Log.d("Joystick", "X: $relativeX, Y: $relativeY, Angle: $angle, Magnitude: $magnitude")
                     Log.d("Direction", direction)
 
@@ -103,15 +109,12 @@ class ControlBot : AppCompatActivity() {
 
 
                     Log.d("Joystick", "Joystick reset to center")
+                    directionText.text = ""
                 }
             }
             true
         }
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
-    }
 
 }
