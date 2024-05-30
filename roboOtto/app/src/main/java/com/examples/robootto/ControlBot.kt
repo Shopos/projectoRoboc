@@ -11,10 +11,14 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import android.widget.Button
 import android.content.Intent
+import android.util.Log
+import android.widget.TextView
+import kotlin.math.atan2
 
 class ControlBot : AppCompatActivity() {
     private lateinit var joystickBall: ImageView
     private lateinit var joystickLayout: RelativeLayout
+    private lateinit var directionText: TextView
     private var centerX: Float = 0f
     private var centerY: Float = 0f
     private var radius: Float = 0f
@@ -35,6 +39,8 @@ class ControlBot : AppCompatActivity() {
 
         joystickBall = findViewById(R.id.joystickBall)
         joystickLayout = findViewById(R.id.joystickLayout)
+        directionText = findViewById(R.id.textView12)
+        directionText.text = ""
 
         joystickLayout.post {
             centerX = (joystickLayout.width / 2).toFloat()
@@ -65,20 +71,50 @@ class ControlBot : AppCompatActivity() {
                         joystickBall.y = constrainedY.toFloat() - joystickBall.height / 2
                     }
 
-                    // Aquí puedes agregar la lógica para procesar el movimiento del joystick
+                    val relativeX = (joystickBall.x  + joystickBall.width / 2) / radius
+                    val relativeY = (joystickBall.y  + joystickBall.height / 2) / radius
+                    var angle = Math.toDegrees(Math.atan2(dy.toDouble(), dx.toDouble()))
+
+                    if (angle < 0) {
+                        angle += 360
+                    }
+
+                    val magnitude = (distance / radius).coerceIn(0.0, 1.0)
+
+                    val direction: String
+
+                    if (angle >= 45 && angle <= 135) {
+                        direction = "Abajo"
+                    }
+                    else if (angle > 135 && angle <= 225){
+                        direction = "Izquierda"
+                    }
+                    else if (angle > 225 && angle < 315){
+                        direction = "Arriba"
+                    }
+                    else{
+                        direction = "Derecha"
+                    }
+
+                    directionText.text = direction
+
+                    Log.d("Joystick", "X: $relativeX, Y: $relativeY, Angle: $angle, Magnitude: $magnitude")
+                    Log.d("Direction", direction)
+
                 }
                 MotionEvent.ACTION_UP -> {
+
                     joystickBall.x = centerX - joystickBall.width / 2
                     joystickBall.y = centerY - joystickBall.height / 2
+
+
+                    Log.d("Joystick", "Joystick reset to center")
+                    directionText.text = ""
                 }
             }
             true
         }
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
-    }
 
 }
