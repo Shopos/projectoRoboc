@@ -33,11 +33,7 @@ class ControlBot : AppCompatActivity() {
             insets
         }
 
-        val optionBack = findViewById<Button>(R.id.buttonBackControl)
-        optionBack.setOnClickListener {
-            val intent = Intent(this, MenuSelector::class.java)
-            startActivity(intent)
-        }
+
 
         joystickBall = findViewById(R.id.joystickBall)
         joystickLayout = findViewById(R.id.joystickLayout)
@@ -113,5 +109,9 @@ class ControlBot : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
 
 }
