@@ -21,13 +21,13 @@ class PistaBailable : AppCompatActivity() {
             insets
         }
 
-        val startButton = findViewById<Button>(R.id.startButton)
-        val stopButton = findViewById<Button>(R.id.stopButton)
+        //val startButton = findViewById<Button>(R.id.startButton)
+        //val stopButton = findViewById<Button>(R.id.stopButton)
 
         val mediaPlayer = MediaPlayer.create(this, R.raw.music_file)
 
-        val backButton = findViewById<Button>(R.id.volverButton)
-
+        //val backButton = findViewById<Button>(R.id.volverButton)
+        /**
         backButton.setOnClickListener{
             mediaPlayer.pause()
             mediaPlayer.seekTo(0)
@@ -46,5 +46,12 @@ class PistaBailable : AppCompatActivity() {
             startButton.visibility = Button.VISIBLE
             stopButton.visibility = Button.GONE
         }
+
+         **/
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 }
