@@ -11,6 +11,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import android.widget.Button
 import android.content.Intent
+import android.util.Log
+import kotlin.math.atan2
 
 class ControlBot : AppCompatActivity() {
     private lateinit var joystickBall: ImageView
@@ -69,11 +71,42 @@ class ControlBot : AppCompatActivity() {
                         joystickBall.y = constrainedY.toFloat() - joystickBall.height / 2
                     }
 
-                    // Aquí puedes agregar la lógica para procesar el movimiento del joystick
+                    val relativeX = (joystickBall.x  + joystickBall.width / 2) / radius
+                    val relativeY = (joystickBall.y  + joystickBall.height / 2) / radius
+                    var angle = Math.toDegrees(Math.atan2(dy.toDouble(), dx.toDouble()))
+
+                    if (angle < 0) {
+                        angle += 360
+                    }
+
+                    val magnitude = (distance / radius).coerceIn(0.0, 1.0)
+
+                    val direction: String
+
+                    if (angle >= 45 && angle <= 135) {
+                        direction = "Abajo"
+                    }
+                    else if (angle > 135 && angle <= 225){
+                        direction = "Izquierda"
+                    }
+                    else if (angle > 225 && angle < 315){
+                        direction = "Arriba"
+                    }
+                    else{
+                        direction = "Derecha"
+                    }
+
+                    Log.d("Joystick", "X: $relativeX, Y: $relativeY, Angle: $angle, Magnitude: $magnitude")
+                    Log.d("Direction", direction)
+
                 }
                 MotionEvent.ACTION_UP -> {
+
                     joystickBall.x = centerX - joystickBall.width / 2
                     joystickBall.y = centerY - joystickBall.height / 2
+
+
+                    Log.d("Joystick", "Joystick reset to center")
                 }
             }
             true
