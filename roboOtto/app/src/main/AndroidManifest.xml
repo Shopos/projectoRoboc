@@ -13,6 +13,9 @@
         android:theme="@style/appTheme"
         tools:targetApi="31">
         <activity
+            android:name=".BlueConfirm"
+            android:exported="false" />
+        <activity
             android:name=".ControlBot"
             android:exported="false" />
         <activity

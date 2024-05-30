@@ -121,13 +121,16 @@
 
             <TableRow
                 android:layout_width="411dp"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp">
 
                 <Button
                     android:id="@+id/button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Play" />
+                    android:background="@drawable/button_round_icc"
+                    android:text="Play"
+                    android:textColor="@color/white" />
 
                 <TextView
                     android:id="@+id/textView13"
@@ -139,13 +142,16 @@
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp">
 
                 <Button
                     android:id="@+id/button2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Play" />
+                    android:background="@drawable/button_round_icc"
+                    android:text="Play"
+                    android:textColor="@color/white" />
 
                 <TextView
                     android:id="@+id/textView14"
@@ -156,13 +162,16 @@
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp">
 
                 <Button
                     android:id="@+id/button3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Play" />
+                    android:background="@drawable/button_round_icc"
+                    android:text="Play"
+                    android:textColor="@color/white" />
 
                 <TextView
                     android:id="@+id/textView15"
