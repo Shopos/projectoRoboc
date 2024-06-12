@@ -6,15 +6,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import android.content.Intent
 import android.widget.Button
+import android.widget.ImageButton
 import androidx.core.view.WindowInsetsCompat
 import android.media.MediaPlayer
-import android.widget.FrameLayout
-import android.widget.ImageView
 
 
 class PistaBailable : AppCompatActivity() {
-
-    private var selectedFrame: FrameLayout? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -25,38 +22,30 @@ class PistaBailable : AppCompatActivity() {
             insets
         }
 
-        //val startButton = findViewById<Button>(R.id.startButton)
-        //val stopButton = findViewById<Button>(R.id.stopButton)
+        val startButton = findViewById<ImageButton>(R.id.startButton)
+        val stopButton = findViewById<Button>(R.id.stopButton)
 
         val mediaPlayer = MediaPlayer.create(this, R.raw.music_file)
 
-        //val backButton = findViewById<Button>(R.id.volverButton)
+        val backButton = findViewById<Button>(R.id.volverButton)
 
-        val baile1 = findViewById<FrameLayout>(R.id.baile1)
-        val baile2 = findViewById<FrameLayout>(R.id.baile2)
-        val baile3 = findViewById<FrameLayout>(R.id.baile3)
-
-
-
-        baile1.setOnClickListener{onImageClick(baile1)}
-        baile2.setOnClickListener{onImageClick(baile2)}
-        baile3.setOnClickListener{onImageClick(baile3)}
-
-
-
-
-    }
-
-    private fun onImageClick(frameLayout: FrameLayout) {
-        if (frameLayout.id == selectedFrame?.id) {
-            frameLayout.setBackgroundResource(android.R.color.transparent)
-            selectedFrame = null
+        backButton.setOnClickListener{
+            mediaPlayer.pause()
+            mediaPlayer.seekTo(0)
+            val intent = Intent(this, MenuSelector::class.java)
+            startActivity(intent)
         }
-        else {
-            selectedFrame?.setBackgroundResource(android.R.color.transparent)
-            frameLayout.setBackgroundResource(R.drawable.border)
-            selectedFrame = frameLayout
+        startButton.setOnClickListener {
+            mediaPlayer.start()
+            startButton.visibility = ImageButton.GONE
+            stopButton.visibility = Button.VISIBLE
+        }
+
+        stopButton.setOnClickListener {
+            mediaPlayer.pause()
+            mediaPlayer.seekTo(0)
+            startButton.visibility = ImageButton.VISIBLE
+            stopButton.visibility = Button.GONE
         }
     }
-
 }
