@@ -23,7 +23,10 @@ class PistaBailable : AppCompatActivity() {
         R.id.baile3 to R.raw.dance3,
         R.id.baile4 to R.raw.dance4,
         R.id.baile5 to R.raw.dance5,
-        R.id.baile6 to R.raw.dance6
+        R.id.baile6 to R.raw.dance6,
+        R.id.baile7 to R.raw.dance6,
+        R.id.baile8 to R.raw.dance6,
+        R.id.baile9 to R.raw.dance6
     )
     private val danceNames = mapOf(
         R.id.baile1 to "Salsa",
@@ -31,7 +34,10 @@ class PistaBailable : AppCompatActivity() {
         R.id.baile3 to "Hip-Hop",
         R.id.baile4 to "Pop",
         R.id.baile5 to "Cumbia",
-        R.id.baile6 to "Breakdance"
+        R.id.baile6 to "Breakdance",
+        R.id.baile7 to "Rock",
+        R.id.baile8 to "Jazz",
+        R.id.baile9 to "Reggaeton"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +81,10 @@ class PistaBailable : AppCompatActivity() {
             findViewById<FrameLayout>(R.id.baile3),
             findViewById<FrameLayout>(R.id.baile4),
             findViewById<FrameLayout>(R.id.baile5),
-            findViewById<FrameLayout>(R.id.baile6)
+            findViewById<FrameLayout>(R.id.baile6),
+            findViewById<FrameLayout>(R.id.baile7),
+            findViewById<FrameLayout>(R.id.baile8),
+            findViewById<FrameLayout>(R.id.baile9)
         )
 
         for (frame in frameLayouts) {
