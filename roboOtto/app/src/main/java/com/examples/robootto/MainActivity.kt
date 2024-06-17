@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         }
         val startButton = findViewById<Button>(R.id.BotonIniciar)
         startButton.setOnClickListener{
-            val intent = Intent(this,MenuSelector::class.java)
+            val intent = Intent(this,BlueConfirm::class.java)
             startActivity(intent)
         }
     }

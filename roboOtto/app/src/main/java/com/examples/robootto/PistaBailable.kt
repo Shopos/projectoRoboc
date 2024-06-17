@@ -6,15 +6,40 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import android.content.Intent
 import android.widget.Button
-import androidx.core.view.WindowInsetsCompat
-import android.media.MediaPlayer
 import android.widget.FrameLayout
+import android.widget.ImageButton
+import android.media.MediaPlayer
 import android.widget.ImageView
-
+import android.widget.TextView
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.content.ContextCompat
 
 class PistaBailable : AppCompatActivity() {
 
-    private var selectedFrame: FrameLayout? = null
+    private var mediaPlayer: MediaPlayer? = null
+    private val songMap = mapOf(
+        R.id.baile1 to R.raw.salsa,
+        R.id.baile2 to R.raw.tango,
+        R.id.baile3 to R.raw.rap,
+        R.id.baile4 to R.raw.pop,
+        R.id.baile5 to R.raw.cumbia,
+        R.id.baile6 to R.raw.breakdance,
+        R.id.baile7 to R.raw.rock,
+        R.id.baile8 to R.raw.jazz,
+        R.id.baile9 to R.raw.reggaeton
+    )
+    private val danceNames = mapOf(
+        R.id.baile1 to "Salsa",
+        R.id.baile2 to "Tango",
+        R.id.baile3 to "Hip-Hop",
+        R.id.baile4 to "Pop",
+        R.id.baile5 to "Cumbia",
+        R.id.baile6 to "Breakdance",
+        R.id.baile7 to "Rock",
+        R.id.baile8 to "Jazz",
+        R.id.baile9 to "Reggaeton"
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -25,38 +50,59 @@ class PistaBailable : AppCompatActivity() {
             insets
         }
 
-        //val startButton = findViewById<Button>(R.id.startButton)
-        //val stopButton = findViewById<Button>(R.id.stopButton)
+        val startButton = findViewById<ImageButton>(R.id.startButton)
+        val stopButton = findViewById<ImageButton>(R.id.stopButton)
+        val selectedDanceLabel = findViewById<TextView>(R.id.selectedDanceLabel)
 
-        val mediaPlayer = MediaPlayer.create(this, R.raw.music_file)
+        startButton.setOnClickListener {
+            mediaPlayer?.start()
+            startButton.visibility = ImageButton.GONE
+            stopButton.visibility = ImageButton.VISIBLE
+        }
 
-        //val backButton = findViewById<Button>(R.id.volverButton)
+        stopButton.setOnClickListener {
+            mediaPlayer?.pause()
+            mediaPlayer?.seekTo(0)
+            startButton.visibility = ImageButton.VISIBLE
+            stopButton.visibility = ImageButton.GONE
+        }
 
-        val baile1 = findViewById<FrameLayout>(R.id.baile1)
-        val baile2 = findViewById<FrameLayout>(R.id.baile2)
-        val baile3 = findViewById<FrameLayout>(R.id.baile3)
+        val frameLayouts = listOf(
+            findViewById<FrameLayout>(R.id.baile1),
+            findViewById<FrameLayout>(R.id.baile2),
+            findViewById<FrameLayout>(R.id.baile3),
+            findViewById<FrameLayout>(R.id.baile4),
+            findViewById<FrameLayout>(R.id.baile5),
+            findViewById<FrameLayout>(R.id.baile6),
+            findViewById<FrameLayout>(R.id.baile7),
+            findViewById<FrameLayout>(R.id.baile8),
+            findViewById<FrameLayout>(R.id.baile9)
+        )
 
+        for (frame in frameLayouts) {
+            frame.setOnClickListener {
+                frameLayouts.forEach { it.background = null }
+                frame.background = ContextCompat.getDrawable(this, R.drawable.border)
 
+                mediaPlayer?.stop()
+                mediaPlayer?.release()
 
-        baile1.setOnClickListener{onImageClick(baile1)}
-        baile2.setOnClickListener{onImageClick(baile2)}
-        baile3.setOnClickListener{onImageClick(baile3)}
+                val songResId = songMap[frame.id]
+                if (songResId != null) {
+                    mediaPlayer = MediaPlayer.create(this, songResId)
+                    mediaPlayer?.start()
+                    startButton.visibility = ImageButton.GONE
+                    stopButton.visibility = ImageButton.VISIBLE
+                }
 
-
-
-
+                val danceName = danceNames[frame.id]
+                selectedDanceLabel.text = danceName ?: "Seleccione un baile"
+            }
+        }
     }
 
-    private fun onImageClick(frameLayout: FrameLayout) {
-        if (frameLayout.id == selectedFrame?.id) {
-            frameLayout.setBackgroundResource(android.R.color.transparent)
-            selectedFrame = null
-        }
-        else {
-            selectedFrame?.setBackgroundResource(android.R.color.transparent)
-            frameLayout.setBackgroundResource(R.drawable.border)
-            selectedFrame = frameLayout
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer?.release()
     }
-
 }
