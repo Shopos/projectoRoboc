@@ -52,15 +52,7 @@ class PistaBailable : AppCompatActivity() {
 
         val startButton = findViewById<ImageButton>(R.id.startButton)
         val stopButton = findViewById<ImageButton>(R.id.stopButton)
-        val backButton = findViewById<Button>(R.id.volverButton)
         val selectedDanceLabel = findViewById<TextView>(R.id.selectedDanceLabel)
-
-        backButton.setOnClickListener {
-            mediaPlayer?.pause()
-            mediaPlayer?.seekTo(0)
-            val intent = Intent(this, MenuSelector::class.java)
-            startActivity(intent)
-        }
 
         startButton.setOnClickListener {
             mediaPlayer?.start()
