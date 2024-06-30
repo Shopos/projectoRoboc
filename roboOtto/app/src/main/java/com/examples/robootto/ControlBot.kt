@@ -1,6 +1,12 @@
 package com.examples.robootto
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
+import android.bluetooth.BluetoothSocket
+import android.content.Context
 import android.os.Bundle
 import android.view.MotionEvent
 import android.widget.RelativeLayout
@@ -11,14 +17,22 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import android.widget.Button
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.util.Log
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import java.util.UUID
 import kotlin.math.atan2
 
 class ControlBot : AppCompatActivity() {
     private lateinit var joystickBall: ImageView
     private lateinit var joystickLayout: RelativeLayout
     private lateinit var directionText: TextView
+
+    lateinit var BTS: BluetoothSocket
+
     private var centerX: Float = 0f
     private var centerY: Float = 0f
     private var radius: Float = 0f
@@ -35,7 +49,11 @@ class ControlBot : AppCompatActivity() {
             insets
         }
 
+        val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
 
+        val bta = bluetoothManager.adapter as BluetoothAdapter
+        val btnEna =  Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+        PedirPermisoVincular(intent.getStringExtra("valor").toString(),bta)
 
         joystickBall = findViewById(R.id.joystickBall)
         joystickLayout = findViewById(R.id.joystickLayout)
@@ -85,15 +103,19 @@ class ControlBot : AppCompatActivity() {
 
                     if (angle >= 45 && angle <= 135) {
                         direction = "Abajo"
+                        BTS.outputStream.write(("AQUI IRIA UN COMANDO").toByteArray());
                     }
                     else if (angle > 135 && angle <= 225){
                         direction = "Izquierda"
+                        BTS.outputStream.write(("AQUI IRIA UN COMANDO").toByteArray());
                     }
                     else if (angle > 225 && angle < 315){
                         direction = "Arriba"
+                        BTS.outputStream.write(("AQUI IRIA UN COMANDO").toByteArray());
                     }
                     else{
                         direction = "Derecha"
+                        BTS.outputStream.write(("AQUI IRIA UN COMANDO").toByteArray());
                     }
 
                     directionText.text = direction
@@ -115,6 +137,40 @@ class ControlBot : AppCompatActivity() {
             true
         }
     }
+    private fun PedirPermisoVincular(DireccionesBT: String, bta: BluetoothAdapter) {
+        if(ContextCompat.checkSelfPermission(this,
+                Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED){
+            // permiso no aceptado
+            requestBT()
+        }else{
+            //permiso aceptado
+            if(!bta.bondedDevices.isEmpty()){
+                try {
+                    val ui: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+                    //val BTS:BluetoothSocket
 
+                    val instalacion: BluetoothDevice = bta.getRemoteDevice(DireccionesBT)
+                    BTS =  instalacion.createRfcommSocketToServiceRecord(ui)
+                    BTS.connect()
+                    Toast.makeText(this,"se ha podido conectar", Toast.LENGTH_SHORT).show()
+                }catch (e:Exception){
+                    Toast.makeText(this,"no se ha podido conectar", Toast.LENGTH_SHORT).show()
+
+                }
+
+            }
+        }
+    }
+
+    private fun requestBT() {
+        if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.BLUETOOTH_CONNECT)){
+            // el usuario rechazo el bluetooth\
+            Toast.makeText(this,"Permiso rechazado", Toast.LENGTH_SHORT).show()
+        }else{
+            // pedir permiso
+            ActivityCompat.requestPermissions(this,
+                arrayOf( Manifest.permission.BLUETOOTH_CONNECT),777)
+        }
+    }
 
 }
