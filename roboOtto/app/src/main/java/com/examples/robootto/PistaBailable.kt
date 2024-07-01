@@ -22,6 +22,9 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.content.ContextCompat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 class PistaBailable : AppCompatActivity() {
@@ -66,7 +69,17 @@ class PistaBailable : AppCompatActivity() {
 
         val bta = bluetoothManager.adapter as BluetoothAdapter
         val btnEna =  Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-        PedirPermisoVincular(intent.getStringExtra("valor").toString(),bta)
+
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                PedirPermisoVincular(intent.getStringExtra("valor").toString(), bta)
+            } catch (e: Exception) {
+                Toast.makeText(this@PistaBailable, "no se ha podido conectar", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this@PistaBailable, BlueConfirm::class.java)
+                startActivity(intent)
+
+            }
+        }
 
         val startButton = findViewById<ImageButton>(R.id.startButton)
         val stopButton = findViewById<ImageButton>(R.id.stopButton)
@@ -96,11 +109,16 @@ class PistaBailable : AppCompatActivity() {
             findViewById<FrameLayout>(R.id.baile8),
             findViewById<FrameLayout>(R.id.baile9)
         )
+        val lista = listOf('e','r','c','t','u','j','m','o','l') // comando para enviar a bailar
 
         for (frame in frameLayouts) {
+
             frame.setOnClickListener {
                 frameLayouts.forEach { it.background = null }
                 frame.background = ContextCompat.getDrawable(this, R.drawable.border)
+
+
+
 
                 mediaPlayer?.stop()
                 mediaPlayer?.release()
@@ -116,8 +134,17 @@ class PistaBailable : AppCompatActivity() {
                 val danceName = danceNames[frame.id]
                 selectedDanceLabel.text = danceName ?: "Seleccione un baile"
 
-                BTS.outputStream.write(("AQUI IRIA UN COMANDO PARA BAILE").toByteArray());
+                Toast.makeText(this,lista.get(frameLayouts.indexOf(frame)).toString(),Toast.LENGTH_SHORT).show()
+                CoroutineScope(Dispatchers.Main).launch {
+                    try {
+                        BTS.outputStream.write((lista.get(frameLayouts.indexOf(frame)).toString()).toByteArray());
+                    } catch (e: Exception) {
+                        Toast.makeText(this@PistaBailable, "no se ha podido conectar", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this@PistaBailable, BlueConfirm::class.java)
+                        startActivity(intent)
 
+                    }
+                }
             }
         }
     }
@@ -135,18 +162,15 @@ class PistaBailable : AppCompatActivity() {
         }else{
             //permiso aceptado
             if(!bta.bondedDevices.isEmpty()){
-                try {
-                    val ui: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
-                    //val BTS:BluetoothSocket
 
-                    val instalacion: BluetoothDevice = bta.getRemoteDevice(DireccionesBT)
-                    BTS =  instalacion.createRfcommSocketToServiceRecord(ui)
-                    BTS.connect()
-                    Toast.makeText(this,"se ha podido conectar", Toast.LENGTH_SHORT).show()
-                }catch (e:Exception){
-                    Toast.makeText(this,"no se ha podido conectar", Toast.LENGTH_SHORT).show()
+                val ui: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+                //val BTS:BluetoothSocket
 
-                }
+                val instalacion: BluetoothDevice = bta.getRemoteDevice(DireccionesBT)
+                BTS =  instalacion.createRfcommSocketToServiceRecord(ui)
+                BTS.connect()
+                Toast.makeText(this,"se ha podido conectar", Toast.LENGTH_SHORT).show()
+
 
             }
         }

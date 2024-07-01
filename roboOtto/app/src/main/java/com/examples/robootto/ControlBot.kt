@@ -23,6 +23,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.UUID
 import kotlin.math.atan2
 
@@ -53,7 +56,18 @@ class ControlBot : AppCompatActivity() {
 
         val bta = bluetoothManager.adapter as BluetoothAdapter
         val btnEna =  Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-        PedirPermisoVincular(intent.getStringExtra("valor").toString(),bta)
+
+
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                PedirPermisoVincular(intent.getStringExtra("valor").toString(), bta)
+            } catch (e: Exception) {
+                Toast.makeText(this@ControlBot, "no se ha podido conectar", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this@ControlBot, BlueConfirm::class.java)
+                startActivity(intent)
+
+            }
+        }
 
         joystickBall = findViewById(R.id.joystickBall)
         joystickLayout = findViewById(R.id.joystickLayout)
@@ -103,19 +117,55 @@ class ControlBot : AppCompatActivity() {
 
                     if (angle >= 45 && angle <= 135) {
                         direction = "Abajo"
-                        BTS.outputStream.write(("AQUI IRIA UN COMANDO").toByteArray());
+                        CoroutineScope(Dispatchers.Main).launch {
+                            try {
+                                BTS.outputStream.write(("s").toByteArray());
+                            } catch (e: Exception) {
+                                Toast.makeText(this@ControlBot, "no se ha podido conectar", Toast.LENGTH_SHORT).show()
+                                val intent = Intent(this@ControlBot, BlueConfirm::class.java)
+                                startActivity(intent)
+
+                            }
+                        }
                     }
                     else if (angle > 135 && angle <= 225){
                         direction = "Izquierda"
-                        BTS.outputStream.write(("AQUI IRIA UN COMANDO").toByteArray());
+                        CoroutineScope(Dispatchers.Main).launch {
+                            try {
+                                BTS.outputStream.write(("a").toByteArray());
+                            } catch (e: Exception) {
+                                Toast.makeText(this@ControlBot, "no se ha podido conectar", Toast.LENGTH_SHORT).show()
+                                val intent = Intent(this@ControlBot, BlueConfirm::class.java)
+                                startActivity(intent)
+
+                            }
+                        }
                     }
                     else if (angle > 225 && angle < 315){
                         direction = "Arriba"
-                        BTS.outputStream.write(("AQUI IRIA UN COMANDO").toByteArray());
+                        CoroutineScope(Dispatchers.Main).launch {
+                            try {
+                                BTS.outputStream.write(("w").toByteArray());
+                            } catch (e: Exception) {
+                                Toast.makeText(this@ControlBot, "no se ha podido conectar", Toast.LENGTH_SHORT).show()
+                                val intent = Intent(this@ControlBot, BlueConfirm::class.java)
+                                startActivity(intent)
+
+                            }
+                        }
                     }
                     else{
                         direction = "Derecha"
-                        BTS.outputStream.write(("AQUI IRIA UN COMANDO").toByteArray());
+                        CoroutineScope(Dispatchers.Main).launch {
+                            try {
+                                BTS.outputStream.write(("d").toByteArray());
+                            } catch (e: Exception) {
+                                Toast.makeText(this@ControlBot, "no se ha podido conectar", Toast.LENGTH_SHORT).show()
+                                val intent = Intent(this@ControlBot, BlueConfirm::class.java)
+                                startActivity(intent)
+
+                            }
+                        }
                     }
 
                     directionText.text = direction
@@ -145,18 +195,15 @@ class ControlBot : AppCompatActivity() {
         }else{
             //permiso aceptado
             if(!bta.bondedDevices.isEmpty()){
-                try {
-                    val ui: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
-                    //val BTS:BluetoothSocket
 
-                    val instalacion: BluetoothDevice = bta.getRemoteDevice(DireccionesBT)
-                    BTS =  instalacion.createRfcommSocketToServiceRecord(ui)
-                    BTS.connect()
-                    Toast.makeText(this,"se ha podido conectar", Toast.LENGTH_SHORT).show()
-                }catch (e:Exception){
-                    Toast.makeText(this,"no se ha podido conectar", Toast.LENGTH_SHORT).show()
+                val ui: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+                //val BTS:BluetoothSocket
 
-                }
+                val instalacion: BluetoothDevice = bta.getRemoteDevice(DireccionesBT)
+                BTS =  instalacion.createRfcommSocketToServiceRecord(ui)
+                BTS.connect()
+                Toast.makeText(this,"se ha podido conectar", Toast.LENGTH_SHORT).show()
+
 
             }
         }
