@@ -50,6 +50,7 @@ class BlueConfirm : AppCompatActivity() {
         PedirPermiso(listaNombreBT,listaDireccionesBT,listaSpinner,bta)
 
         startConnection.setOnClickListener{
+            PedirPermisoVincular(listaDireccionesBT, listaSpinner, bta)
             val intent = Intent(this,MenuSelector::class.java)
             intent.putExtra("valor", listaDireccionesBT.getItem(listaSpinner.selectedItemPosition));
             startActivity(intent)
@@ -89,8 +90,14 @@ class BlueConfirm : AppCompatActivity() {
                     //val BTS:BluetoothSocket
                     Toast.makeText(this,"se ha podido conectar", Toast.LENGTH_SHORT).show()
                     val instalacion: BluetoothDevice = bta.getRemoteDevice(listaDireccionesBT.getItem(ListaBT.selectedItemPosition))
+
+
+
                     BTS =  instalacion.createRfcommSocketToServiceRecord(ui)
+
+
                     BTS.connect()
+                    BluetoothSingle.initialize(BTS)
 
                 }catch (e:Exception){
                     Toast.makeText(this,"no se ha podido conectar", Toast.LENGTH_SHORT).show()

@@ -60,7 +60,7 @@ class ControlBot : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.Main).launch {
             try {
-                PedirPermisoVincular(intent.getStringExtra("valor").toString(), bta)
+               // PedirPermisoVincular(intent.getStringExtra("valor").toString(), bta)
             } catch (e: Exception) {
                 Toast.makeText(this@ControlBot, "no se ha podido conectar", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this@ControlBot, BlueConfirm::class.java)
@@ -119,7 +119,7 @@ class ControlBot : AppCompatActivity() {
                         direction = "Abajo"
                         CoroutineScope(Dispatchers.Main).launch {
                             try {
-                                BTS.outputStream.write(("s").toByteArray());
+                                BluetoothSingle.GetSocket().outputStream.write(("s").toByteArray());
                             } catch (e: Exception) {
                                 Toast.makeText(this@ControlBot, "no se ha podido conectar", Toast.LENGTH_SHORT).show()
                                 val intent = Intent(this@ControlBot, BlueConfirm::class.java)
@@ -132,7 +132,7 @@ class ControlBot : AppCompatActivity() {
                         direction = "Izquierda"
                         CoroutineScope(Dispatchers.Main).launch {
                             try {
-                                BTS.outputStream.write(("a").toByteArray());
+                                BluetoothSingle.GetSocket().outputStream.write(("a").toByteArray());
                             } catch (e: Exception) {
                                 Toast.makeText(this@ControlBot, "no se ha podido conectar", Toast.LENGTH_SHORT).show()
                                 val intent = Intent(this@ControlBot, BlueConfirm::class.java)
@@ -145,7 +145,7 @@ class ControlBot : AppCompatActivity() {
                         direction = "Arriba"
                         CoroutineScope(Dispatchers.Main).launch {
                             try {
-                                BTS.outputStream.write(("w").toByteArray());
+                                BluetoothSingle.GetSocket().outputStream.write(("w").toByteArray());
                             } catch (e: Exception) {
                                 Toast.makeText(this@ControlBot, "no se ha podido conectar", Toast.LENGTH_SHORT).show()
                                 val intent = Intent(this@ControlBot, BlueConfirm::class.java)
@@ -158,7 +158,7 @@ class ControlBot : AppCompatActivity() {
                         direction = "Derecha"
                         CoroutineScope(Dispatchers.Main).launch {
                             try {
-                                BTS.outputStream.write(("d").toByteArray());
+                                BluetoothSingle.GetSocket().outputStream.write(("d").toByteArray());
                             } catch (e: Exception) {
                                 Toast.makeText(this@ControlBot, "no se ha podido conectar", Toast.LENGTH_SHORT).show()
                                 val intent = Intent(this@ControlBot, BlueConfirm::class.java)
@@ -187,37 +187,4 @@ class ControlBot : AppCompatActivity() {
             true
         }
     }
-    private fun PedirPermisoVincular(DireccionesBT: String, bta: BluetoothAdapter) {
-        if(ContextCompat.checkSelfPermission(this,
-                Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED){
-            // permiso no aceptado
-            requestBT()
-        }else{
-            //permiso aceptado
-            if(!bta.bondedDevices.isEmpty()){
-
-                val ui: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
-                //val BTS:BluetoothSocket
-
-                val instalacion: BluetoothDevice = bta.getRemoteDevice(DireccionesBT)
-                BTS =  instalacion.createRfcommSocketToServiceRecord(ui)
-                BTS.connect()
-                Toast.makeText(this,"se ha podido conectar", Toast.LENGTH_SHORT).show()
-
-
-            }
-        }
-    }
-
-    private fun requestBT() {
-        if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.BLUETOOTH_CONNECT)){
-            // el usuario rechazo el bluetooth\
-            Toast.makeText(this,"Permiso rechazado", Toast.LENGTH_SHORT).show()
-        }else{
-            // pedir permiso
-            ActivityCompat.requestPermissions(this,
-                arrayOf( Manifest.permission.BLUETOOTH_CONNECT),777)
-        }
-    }
-
 }
