@@ -19,6 +19,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.ViewCompat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 class BlueConfirm : AppCompatActivity() {
@@ -50,10 +53,21 @@ class BlueConfirm : AppCompatActivity() {
         PedirPermiso(listaNombreBT,listaDireccionesBT,listaSpinner,bta)
 
         startConnection.setOnClickListener{
-            PedirPermisoVincular(listaDireccionesBT, listaSpinner, bta)
-            val intent = Intent(this,MenuSelector::class.java)
-            intent.putExtra("valor", listaDireccionesBT.getItem(listaSpinner.selectedItemPosition));
-            startActivity(intent)
+
+            CoroutineScope(Dispatchers.Main).launch {
+                try {
+                    PedirPermisoVincular(listaDireccionesBT, listaSpinner, bta)
+                    val intent = Intent(this@BlueConfirm,MenuSelector::class.java)
+                    intent.putExtra("valor", listaDireccionesBT.getItem(listaSpinner.selectedItemPosition));
+                    Toast.makeText(this@BlueConfirm,"se ha podido conectar", Toast.LENGTH_SHORT).show()
+                    startActivity(intent)
+
+                } catch (e: Exception) {
+                    Toast.makeText(this@BlueConfirm, "no se ha podido conectar", Toast.LENGTH_SHORT).show()
+
+                }
+            }
+
         }
     }
 
@@ -85,24 +99,18 @@ class BlueConfirm : AppCompatActivity() {
         }else{
             //permiso aceptado
             if(!bta.bondedDevices.isEmpty()){
-                try {
-                    val ui: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
-                    //val BTS:BluetoothSocket
-                    Toast.makeText(this,"se ha podido conectar", Toast.LENGTH_SHORT).show()
-                    val instalacion: BluetoothDevice = bta.getRemoteDevice(listaDireccionesBT.getItem(ListaBT.selectedItemPosition))
+
+                val ui: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+                //val BTS:BluetoothSocket
+
+                val instalacion: BluetoothDevice = bta.getRemoteDevice(listaDireccionesBT.getItem(ListaBT.selectedItemPosition))
 
 
 
-                    BTS =  instalacion.createRfcommSocketToServiceRecord(ui)
-
-
-                    BTS.connect()
-                    BluetoothSingle.initialize(BTS)
-
-                }catch (e:Exception){
-                    Toast.makeText(this,"no se ha podido conectar", Toast.LENGTH_SHORT).show()
-
-                }
+                BTS =  instalacion.createRfcommSocketToServiceRecord(ui)
+                BTS.connect()
+                Toast.makeText(this,"paso", Toast.LENGTH_SHORT).show()
+                BluetoothSingle.initialize(BTS)
 
             }
         }
