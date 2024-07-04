@@ -49,13 +49,14 @@ class BlueConfirm : AppCompatActivity() {
         val bta = bluetoothManager.adapter as BluetoothAdapter
         val btnEna =  Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
 
-
+        startConnection.isEnabled = true
         PedirPermiso(listaNombreBT,listaDireccionesBT,listaSpinner,bta)
 
         startConnection.setOnClickListener{
-
+            startConnection.isEnabled = false
             CoroutineScope(Dispatchers.Main).launch {
                 try {
+
                     PedirPermisoVincular(listaDireccionesBT, listaSpinner, bta)
                     val intent = Intent(this@BlueConfirm,MenuSelector::class.java)
                     intent.putExtra("valor", listaDireccionesBT.getItem(listaSpinner.selectedItemPosition));
@@ -63,6 +64,7 @@ class BlueConfirm : AppCompatActivity() {
                     startActivity(intent)
 
                 } catch (e: Exception) {
+                    startConnection.isEnabled = true
                     Toast.makeText(this@BlueConfirm, "no se ha podido conectar", Toast.LENGTH_SHORT).show()
 
                 }

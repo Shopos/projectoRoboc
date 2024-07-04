@@ -96,6 +96,18 @@ class PistaBailable : AppCompatActivity() {
             mediaPlayer?.seekTo(0)
             startButton.visibility = ImageButton.VISIBLE
             stopButton.visibility = ImageButton.GONE
+
+            CoroutineScope(Dispatchers.Main).launch {
+                try {
+
+                    BluetoothSingle.GetSocket().outputStream.write(("q").toByteArray());
+                } catch (e: Exception) {
+                    Toast.makeText(this@PistaBailable, "no se ha podido conectar", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this@PistaBailable, BlueConfirm::class.java)
+                    startActivity(intent)
+
+                }
+            }
         }
 
         val frameLayouts = listOf(
@@ -134,10 +146,13 @@ class PistaBailable : AppCompatActivity() {
                 val danceName = danceNames[frame.id]
                 selectedDanceLabel.text = danceName ?: "Seleccione un baile"
 
+
                 Toast.makeText(this,lista.get(frameLayouts.indexOf(frame)).toString(),Toast.LENGTH_SHORT).show()
                 CoroutineScope(Dispatchers.Main).launch {
                     try {
                         BluetoothSingle.GetSocket().outputStream.write((lista.get(frameLayouts.indexOf(frame)).toString()).toByteArray());
+
+
                     } catch (e: Exception) {
                         Toast.makeText(this@PistaBailable, "no se ha podido conectar", Toast.LENGTH_SHORT).show()
                         val intent = Intent(this@PistaBailable, BlueConfirm::class.java)

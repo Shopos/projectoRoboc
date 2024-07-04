@@ -81,7 +81,7 @@ class ControlBot : AppCompatActivity() {
             joystickBall.x = centerX - joystickBall.width / 2
             joystickBall.y = centerY - joystickBall.height / 2
         }
-
+        var movimientoactual = -1
         joystickBall.setOnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_MOVE -> {
@@ -116,54 +116,106 @@ class ControlBot : AppCompatActivity() {
                     val direction: String
 
                     if (angle >= 45 && angle <= 135) {
-                        direction = "Abajo"
-                        CoroutineScope(Dispatchers.Main).launch {
-                            try {
-                                BluetoothSingle.GetSocket().outputStream.write(("s").toByteArray());
-                            } catch (e: Exception) {
-                                Toast.makeText(this@ControlBot, "no se ha podido conectar", Toast.LENGTH_SHORT).show()
-                                val intent = Intent(this@ControlBot, BlueConfirm::class.java)
-                                startActivity(intent)
 
+                        direction = "Abajo"
+                        if(movimientoactual != 0) {
+                            movimientoactual = 0
+
+                            CoroutineScope(Dispatchers.Main).launch {
+                                try {
+                                    BluetoothSingle.GetSocket().outputStream.write(("s").toByteArray());
+                                } catch (e: Exception) {
+                                    Toast.makeText(
+                                        this@ControlBot,
+                                        "no se ha podido conectar",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    val intent = Intent(this@ControlBot, BlueConfirm::class.java)
+                                    startActivity(intent)
+
+                                }
                             }
                         }
                     }
                     else if (angle > 135 && angle <= 225){
                         direction = "Izquierda"
-                        CoroutineScope(Dispatchers.Main).launch {
-                            try {
-                                BluetoothSingle.GetSocket().outputStream.write(("a").toByteArray());
-                            } catch (e: Exception) {
-                                Toast.makeText(this@ControlBot, "no se ha podido conectar", Toast.LENGTH_SHORT).show()
-                                val intent = Intent(this@ControlBot, BlueConfirm::class.java)
-                                startActivity(intent)
+                        if(movimientoactual != 1) {
+                            movimientoactual = 1
+                            CoroutineScope(Dispatchers.Main).launch {
+                                try {
+                                    BluetoothSingle.GetSocket().outputStream.write(("a").toByteArray());
+                                } catch (e: Exception) {
+                                    Toast.makeText(
+                                        this@ControlBot,
+                                        "no se ha podido conectar",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    val intent = Intent(this@ControlBot, BlueConfirm::class.java)
+                                    startActivity(intent)
 
+                                }
                             }
                         }
                     }
                     else if (angle > 225 && angle < 315){
-                        direction = "Arriba"
-                        CoroutineScope(Dispatchers.Main).launch {
-                            try {
-                                BluetoothSingle.GetSocket().outputStream.write(("w").toByteArray());
-                            } catch (e: Exception) {
-                                Toast.makeText(this@ControlBot, "no se ha podido conectar", Toast.LENGTH_SHORT).show()
-                                val intent = Intent(this@ControlBot, BlueConfirm::class.java)
-                                startActivity(intent)
 
+                        direction = "Arriba"
+                        if(movimientoactual != 2) {
+                            movimientoactual = 2
+
+                            CoroutineScope(Dispatchers.Main).launch {
+                                try {
+                                    BluetoothSingle.GetSocket().outputStream.write(("w").toByteArray());
+                                } catch (e: Exception) {
+                                    Toast.makeText(
+                                        this@ControlBot,
+                                        "no se ha podido conectar",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    val intent = Intent(this@ControlBot, BlueConfirm::class.java)
+                                    startActivity(intent)
+
+                                }
                             }
                         }
                     }
                     else{
                         direction = "Derecha"
-                        CoroutineScope(Dispatchers.Main).launch {
-                            try {
-                                BluetoothSingle.GetSocket().outputStream.write(("d").toByteArray());
-                            } catch (e: Exception) {
-                                Toast.makeText(this@ControlBot, "no se ha podido conectar", Toast.LENGTH_SHORT).show()
-                                val intent = Intent(this@ControlBot, BlueConfirm::class.java)
-                                startActivity(intent)
+                        if(movimientoactual != 3) {
+                            movimientoactual = 3
 
+                            CoroutineScope(Dispatchers.Main).launch {
+                                try {
+                                    BluetoothSingle.GetSocket().outputStream.write(("d").toByteArray());
+                                } catch (e: Exception) {
+                                    Toast.makeText(
+                                        this@ControlBot,
+                                        "no se ha podido conectar",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    val intent = Intent(this@ControlBot, BlueConfirm::class.java)
+                                    startActivity(intent)
+
+                                }
+                            }
+                        }
+                    }
+                    if(magnitude == 0.0){
+                        if(movimientoactual == 4){
+                            movimientoactual = 4
+                            CoroutineScope(Dispatchers.Main).launch {
+                                try {
+                                    BluetoothSingle.GetSocket().outputStream.write(("q").toByteArray());
+                                } catch (e: Exception) {
+                                    Toast.makeText(
+                                        this@ControlBot,
+                                        "no se ha podido conectar",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    val intent = Intent(this@ControlBot, BlueConfirm::class.java)
+                                    startActivity(intent)
+
+                                }
                             }
                         }
                     }
